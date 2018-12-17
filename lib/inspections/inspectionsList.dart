@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
-import './data/InspectionClass.dart';
-import '../helpers/JsonHelper.dart';
+import './data/InspectionStatusClass.dart';
 import '../helpers/EnumHelper.dart';
 import '../inspections/data/api.dart';
 
 class InspectionsListState extends State<InspectionsList> {
   Map<String, bool> _tapInProgress = Map<String, bool>();
-  Future<http.Response> inspectionStatusResponse;
-  List<InspectionClass> _inspections = List<InspectionClass>();
+  Future<List<InspectionStatusClass>> inspectionStatusResponse;
 
   @override
   void initState() {
@@ -25,7 +22,8 @@ class InspectionsListState extends State<InspectionsList> {
     print('refresh ' + inspection.name);
   }
 
-  void _onTapDownRefresh(TapDownDetails details, InspectionClass inspection) {
+  void _onTapDownRefresh(
+      TapDownDetails details, InspectionStatusClass inspection) {
     setState(() {
       _tapInProgress[inspection.name] = true;
     });
@@ -75,8 +73,10 @@ class InspectionsListState extends State<InspectionsList> {
                   ),
                   Expanded(
                       flex: 1,
-                      child:
-                          inspection.hasFollowups ? Text('Yes') : Text('No')),
+                      child: inspection.hasFollowups != null &&
+                              inspection.hasFollowups == true
+                          ? Text('Yes')
+                          : Text('No')),
                   Expanded(
                     flex: 1,
                     child: Row(
@@ -111,34 +111,44 @@ class InspectionsListState extends State<InspectionsList> {
     );
   }
 
-  List<Widget> _buildInspections() {
+  List<Widget> _buildInspections(List<InspectionStatusClass> inspections) {
     List<Widget> list = new List<Widget>();
-    /*var inspectionsList = JsonHelper.parseJSONArray(
-        '[{"name":"1400 Bellview Apartments","scheduled":"2018-10-20T14:18:58.36Z","completed":null,"status":0,"hasFollowups":false,"year":2018,"filesToSync":1},{"name":"123 Cherry Lane","scheduled":null,"completed":null,"status":1,"hasFollowups":false,"year":2018,"filesToSync":1},{"name":"Hudson Property","scheduled":"2018-10-20T14:18:58.36Z","completed":null,"status":4,"hasFollowups":false,"year":2018,"filesToSync":0},{"name":"Westview Condominiums","scheduled":null,"completed":"2018-10-30T14:18:58.36Z","status":3,"hasFollowups":false,"year":2018,"filesToSync":0},{"name":"An Apartment Complex","scheduled":null,"completed":null,"status":0,"hasFollowups":false,"year":2018,"filesToSync":1},{"name":"Beechwood Condos","scheduled":null,"completed":null,"status":2,"hasFollowups":false,"year":2018,"filesToSync":1},{"name":"Kings Crossing","scheduled":null,"completed":"2018-10-30T14:18:58.36Z","status":2,"hasFollowups":false,"year":2018,"filesToSync":1},{"name":"Greenville Apartments","scheduled":null,"completed":null,"status":3,"hasFollowups":false,"year":2018,"filesToSync":1},{"name":"Knights Shadow Properties","scheduled":null,"completed":null,"status":3,"hasFollowups":false,"year":2018,"filesToSync":0},{"name":"Perry on Main Apartments","scheduled":null,"completed":null,"status":1,"hasFollowups":false,"year":2018,"filesToSync":1},{"name":"Eastville","scheduled":null,"completed":null,"status":0,"hasFollowups":false,"year":2017,"filesToSync":1},{"name":"Bay North","scheduled":null,"completed":null,"status":4,"hasFollowups":false,"year":2017,"filesToSync":0},{"name":"Buzzards Bay Skyrise","scheduled":null,"completed":"2018-10-30T14:18:58.36Z","status":1,"hasFollowups":false,"year":2017,"filesToSync":1},{"name":"123 Cherry Lane","scheduled":null,"completed":null,"status":1,"hasFollowups":false,"year":2017,"filesToSync":1},{"name":"Hudson Property","scheduled":"2018-10-20T14:18:58.36Z","completed":null,"status":4,"hasFollowups":false,"year":2017,"filesToSync":0},{"name":"Westview Condominiums","scheduled":null,"completed":"2018-10-30T14:18:58.36Z","status":3,"hasFollowups":false,"year":2017,"filesToSync":0},{"name":"An Apartment Complex","scheduled":null,"completed":null,"status":0,"hasFollowups":false,"year":2017,"filesToSync":1},{"name":"Kings Crossing","scheduled":null,"completed":"2018-10-30T14:18:58.36Z","status":2,"hasFollowups":false,"year":2018,"filesToSync":1},{"name":"Greenville Apartments","scheduled":null,"completed":null,"status":3,"hasFollowups":false,"year":2018,"filesToSync":1},{"name":"Knights Shadow Properties","scheduled":null,"completed":null,"status":3,"hasFollowups":false,"year":2018,"filesToSync":0},{"name":"Perry on Main Apartments","scheduled":null,"completed":null,"status":1,"hasFollowups":false,"year":2017,"filesToSync":1}]');
-    for (Map<String, dynamic> obj in inspectionsList) {
-      var inspection = InspectionClass.fromMap(obj);
+    for (var inspection in inspections) {
       if (widget.selectedYear == inspection.year) {
         list.add(_buildInspection(inspection));
       }
-    }*/
+    }
 
     return list;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: Container(
-      margin: EdgeInsets.only(top: 10),
-      child: ListView(
-          padding: EdgeInsets.only(left: 10, right: 10),
-          children: _buildInspections()),
-    ));
+    return FutureBuilder<List<InspectionStatusClass>>(
+      future: inspectionStatusResponse,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Expanded(
+            child: Container(
+              margin: EdgeInsets.only(top: 10),
+              child: ListView(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  children: _buildInspections(snapshot.data)),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+
+        // By default, show a loading spinner
+        return CircularProgressIndicator();
+      },
+    );
   }
 }
 
 class InspectionsList extends StatefulWidget {
-  int selectedYear;
+  final int selectedYear;
   @override
   InspectionsListState createState() => new InspectionsListState();
 

@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import '../../enums.dart';
 import '../../helpers/EnumHelper.dart';
 
-class InspectionClass {
+class InspectionStatusClass {
   String name;
   DateTime scheduled;
   DateTime completed;
@@ -12,10 +12,10 @@ class InspectionClass {
   int filesToSync;
   int year;
 
-  InspectionClass();
+  InspectionStatusClass();
 
-  static InspectionClass fromMap(Map<String, dynamic> inspectionMap) {
-    InspectionClass obj = new InspectionClass();
+  factory InspectionStatusClass.fromJson(Map<String, dynamic> inspectionMap) {
+    InspectionStatusClass obj = new InspectionStatusClass();
     obj.name = inspectionMap['name'];
     obj.scheduled = inspectionMap['scheduled'] == null
         ? null

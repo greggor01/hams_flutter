@@ -1,5 +1,8 @@
 import 'package:http/http.dart' as http;
 
+import '../../inspections/data/InspectionStatusClass.dart';
+import '../../helpers/JsonHelper.dart';
+
 class Apis {
   static const String _serverURL =
       'https://hudson-ams-test-dev.azurewebsites.net/api/';
@@ -19,11 +22,27 @@ class Apis {
     return http.post(postEndpoint, headers: null, body: body);
   }
 
-  static Future<http.Response> getSiteInspectionUpdateStatus() {
-    return http.post(
+  static Future<List<InspectionStatusClass>>
+      getSiteInspectionUpdateStatus() async {
+    final response = await http.post(
         _serverURL +
             'services/app/siteInspectionSync/getSiteInspectionUpdateStatus',
         headers: {'Authorization': _authHeader},
         body: {});
+
+    List<InspectionStatusClass> list = List<InspectionStatusClass>();
+
+    // If server returns an OK response, parse the JSON
+    if (response.statusCode == 200) {
+      var tempList = JsonHelper.parseJSONArray(response.body);
+      for (Map<String, dynamic> obj in tempList) {
+        var inspection = InspectionStatusClass.fromJson(obj);
+        list.add(inspection);
+      }
+      return list;
+    } else {
+      // If that response was not OK, throw an error.
+      throw Exception('Failed to load post');
+    }
   }
 }
