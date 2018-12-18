@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
-import '../../enums.dart';
-import '../../helpers/EnumHelper.dart';
+import '../enums.dart';
+import '../helpers/EnumHelper.dart';
 
 class InspectionStatusClass {
   String name;

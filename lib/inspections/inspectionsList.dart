@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import './data/InspectionStatusClass.dart';
+import '../models/InspectionStatusClass.dart';
 import '../helpers/EnumHelper.dart';
-import '../inspections/data/api.dart';
+import '../api.dart';
 
 class InspectionsListState extends State<InspectionsList> {
   bool childTap = false;

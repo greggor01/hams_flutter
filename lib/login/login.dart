@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'dart:async';
 
-import '../inspections/data/api.dart';
+import '../api.dart';
 
 class _LoginData {
   String username = '';

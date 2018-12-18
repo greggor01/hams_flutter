@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 
-import '../../inspections/data/InspectionStatusClass.dart';
-import '../../helpers/JsonHelper.dart';
+import './models/InspectionStatusClass.dart';
+import './helpers/JsonHelper.dart';
 
 class Apis {
   static const String _serverURL =
