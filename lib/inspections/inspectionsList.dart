@@ -5,6 +5,7 @@ import '../helpers/EnumHelper.dart';
 import '../inspections/data/api.dart';
 
 class InspectionsListState extends State<InspectionsList> {
+  bool childTap = false;
   Map<String, bool> _tapInProgress = Map<String, bool>();
   Future<List<InspectionStatusClass>> inspectionStatusResponse;
 
@@ -19,6 +20,7 @@ class InspectionsListState extends State<InspectionsList> {
   }
 
   void _onTapRefresh(inspection) {
+    setState(() {});
     print('refresh ' + inspection.name);
   }
 
@@ -50,9 +52,11 @@ class InspectionsListState extends State<InspectionsList> {
         color: Colors.grey[300],
         elevation: 1,
         child: InkWell(
-            onTap: () {
-              _onTapInspection(inspection);
-            },
+            onTap: (childTap == false)
+                ? () {
+                    _onTapInspection(inspection);
+                  }
+                : null,
             splashColor: Colors.blueGrey,
             child: Container(
               padding: EdgeInsets.only(left: 10, right: 10),
@@ -84,22 +88,27 @@ class InspectionsListState extends State<InspectionsList> {
                       children: <Widget>[
                         Text(inspection.filesToSync.toString()),
                         inspection.filesToSync != 0
-                            ? Material(
-                                elevation: 2,
-                                color: Colors.blueGrey[100],
-                                borderRadius: BorderRadius.circular(100),
-                                child: Container(
-                                  width: 45,
-                                  height: 45,
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(100),
-                                    splashColor: Colors.blueGrey[400],
-                                    onTap: () {
-                                      _onTapRefresh(inspection);
-                                    },
-                                    child: Icon(Icons.refresh),
-                                  ),
-                                ))
+                            ? Container(
+                                width: 45,
+                                height: 45,
+                                child: RaisedButton(
+                                  padding: EdgeInsets.all(0),
+                                  shape: new RoundedRectangleBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(30.0)),
+                                  elevation: 2,
+                                  splashColor: Colors.blueGrey[400],
+                                  onPressed: () {
+                                    _onTapRefresh(inspection);
+                                  },
+                                  onHighlightChanged: (changed) {
+                                    setState(() {
+                                      childTap = changed;
+                                    });
+                                  },
+                                  child: Icon(Icons.refresh),
+                                ),
+                              )
                             : Spacer()
                       ],
                     ),
