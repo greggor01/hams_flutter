@@ -3,19 +3,19 @@ import 'package:intl/intl.dart';
 import '../enums.dart';
 import '../helpers/EnumHelper.dart';
 
-class InspectionStatusClass {
+class InspectionStatus {
   String name;
   DateTime scheduled;
   DateTime completed;
-  InspectionStatus status;
+  InspectionStatusEnum status;
   bool hasFollowups;
   int filesToSync;
   int year;
 
-  InspectionStatusClass();
+  InspectionStatus();
 
-  factory InspectionStatusClass.fromJson(Map<String, dynamic> inspectionMap) {
-    InspectionStatusClass obj = new InspectionStatusClass();
+  factory InspectionStatus.fromJson(Map<String, dynamic> inspectionMap) {
+    InspectionStatus obj = new InspectionStatus();
     obj.name = inspectionMap['name'];
     obj.scheduled = inspectionMap['scheduled'] == null
         ? null
@@ -23,7 +23,7 @@ class InspectionStatusClass {
     obj.completed = inspectionMap['completed'] == null
         ? null
         : DateTime.parse(inspectionMap['completed']);
-    obj.status = InspectionStatus.values[inspectionMap['status']];
+    obj.status = InspectionStatusEnum.values[inspectionMap['status']];
     obj.hasFollowups = inspectionMap['hasFollowups'];
     obj.filesToSync = inspectionMap['filesToSync'];
     obj.year = inspectionMap['year'];

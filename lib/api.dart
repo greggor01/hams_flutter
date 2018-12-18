@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 
-import './models/InspectionStatusClass.dart';
+import './models/InspectionStatus.dart';
 import './helpers/JsonHelper.dart';
 
 class Apis {
@@ -22,21 +22,20 @@ class Apis {
     return http.post(postEndpoint, headers: null, body: body);
   }
 
-  static Future<List<InspectionStatusClass>>
-      getSiteInspectionUpdateStatus() async {
+  static Future<List<InspectionStatus>> getSiteInspectionUpdateStatus() async {
     final response = await http.post(
         _serverURL +
             'services/app/siteInspectionSync/getSiteInspectionUpdateStatus',
         headers: {'Authorization': _authHeader},
         body: {});
 
-    List<InspectionStatusClass> list = List<InspectionStatusClass>();
+    List<InspectionStatus> list = List<InspectionStatus>();
 
     // If server returns an OK response, parse the JSON
     if (response.statusCode == 200) {
       var tempList = JsonHelper.parseJSONArray(response.body);
       for (Map<String, dynamic> obj in tempList) {
-        var inspection = InspectionStatusClass.fromJson(obj);
+        var inspection = InspectionStatus.fromJson(obj);
         list.add(inspection);
       }
       return list;

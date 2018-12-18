@@ -1,22 +1,22 @@
 import '../enums.dart';
 
 class EnumHelper {
-  static String getInspectionStatusDisplayName(InspectionStatus value) {
+  static String getInspectionStatusDisplayName(InspectionStatusEnum value) {
     String retVal = "Not Started";
     switch (value) {
-      case InspectionStatus.notStarted:
+      case InspectionStatusEnum.notStarted:
         retVal = "Not Started";
         break;
-      case InspectionStatus.started:
+      case InspectionStatusEnum.started:
         retVal = "In Progress";
         break;
-      case InspectionStatus.submitted:
+      case InspectionStatusEnum.submitted:
         retVal = "Submitted";
         break;
-      case InspectionStatus.approved:
+      case InspectionStatusEnum.approved:
         retVal = "Approved";
         break;
-      case InspectionStatus.rejected:
+      case InspectionStatusEnum.rejected:
         retVal = "Rejected";
         break;
     }

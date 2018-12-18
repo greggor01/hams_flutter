@@ -1,2 +1,2 @@
 enum MenuOptions { logout }
-enum InspectionStatus { notStarted, started, submitted, approved, rejected }
+enum InspectionStatusEnum { notStarted, started, submitted, approved, rejected }

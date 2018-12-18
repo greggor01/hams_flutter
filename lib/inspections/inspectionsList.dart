@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../models/InspectionStatusClass.dart';
+import '../models/InspectionStatus.dart';
 import '../helpers/EnumHelper.dart';
 import '../api.dart';
 
 class InspectionsListState extends State<InspectionsList> {
   bool childTap = false;
   Map<String, bool> _tapInProgress = Map<String, bool>();
-  Future<List<InspectionStatusClass>> inspectionStatusResponse;
+  Future<List<InspectionStatus>> inspectionStatusResponse;
 
   @override
   void initState() {
@@ -24,8 +24,7 @@ class InspectionsListState extends State<InspectionsList> {
     print('refresh ' + inspection.name);
   }
 
-  void _onTapDownRefresh(
-      TapDownDetails details, InspectionStatusClass inspection) {
+  void _onTapDownRefresh(TapDownDetails details, InspectionStatus inspection) {
     setState(() {
       _tapInProgress[inspection.name] = true;
     });
@@ -120,7 +119,7 @@ class InspectionsListState extends State<InspectionsList> {
     );
   }
 
-  List<Widget> _buildInspections(List<InspectionStatusClass> inspections) {
+  List<Widget> _buildInspections(List<InspectionStatus> inspections) {
     List<Widget> list = new List<Widget>();
     for (var inspection in inspections) {
       if (widget.selectedYear == inspection.year) {
@@ -133,7 +132,7 @@ class InspectionsListState extends State<InspectionsList> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<InspectionStatusClass>>(
+    return FutureBuilder<List<InspectionStatus>>(
       future: inspectionStatusResponse,
       builder: (context, snapshot) {
         if (snapshot.hasData) {

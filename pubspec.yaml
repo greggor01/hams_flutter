@@ -16,6 +16,7 @@ dependencies:
     flutter:
         sdk: flutter
 
+    scoped_model:
     intl:
     http:
     # The following adds the Cupertino Icons font to your application.
